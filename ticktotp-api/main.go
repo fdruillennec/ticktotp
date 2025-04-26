@@ -29,7 +29,7 @@ func main() {
 	fmt.Printf("✅ Server running at http://0.0.0.0:%s\n", port)
 
 	// Start server with CORS middleware
-	err := http.ListenAndServe("0.0.0.0:"+port, corsHandler.Handler(mux))
+	err := http.ListenAndServe("0.0.0.0:"+port, mux)
 	if err != nil {
 		fmt.Println("❌ Error starting server:", err)
 	}
