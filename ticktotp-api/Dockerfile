@@ -1,4 +1,4 @@
-FROM golang:1.21-alpine as builder
+FROM golang:1.21-alpine AS builder
 
 WORKDIR /app
 
@@ -6,16 +6,15 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
-RUN go build -o ticktotp-api .
 
-FROM alpine:latest as runtime
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o main .
 
-WORKDIR /app
+FROM gcr.io/distroless/static:nonroot as runtime
 
-RUN apk --no-cache add ca-certificates
-
-COPY --from=builder /app/ticktotp-api .
+COPY --from=builder /app/main /
 
 EXPOSE 8080
 
-CMD ["./ticktotp-api"]
+USER nonroot:nonroot
+
+ENTRYPOINT ["/main"]
