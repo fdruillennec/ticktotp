@@ -17,7 +17,7 @@ const Home: React.FC = () => {
 
   const handleLogin = async () => {
     try {
-      const res = await fetch(`https://ticktotp.onrender.com/status?email=${encodeURIComponent(email)}`);
+      const res = await fetch(`https://ticktotp-aj0e.onrender.com/api/status?email=${encodeURIComponent(email)}`);
       if (res.status === 404) {
         setStep('generate');
       } else if (res.ok) {
@@ -33,7 +33,7 @@ const Home: React.FC = () => {
 
   const generateQrCode = async () => {
     try {
-      const res = await fetch('https://ticktotp.onrender.com/generate', {
+      const res = await fetch('https://ticktotp-aj0e.onrender.com/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
@@ -58,7 +58,7 @@ const Home: React.FC = () => {
     setIsVerifying(true);
     try {
       const fullToken = token.join('');
-      const res = await fetch('https://ticktotp.onrender.com/verify', {
+      const res = await fetch('https://ticktotp-aj0e.onrender.com/api/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, token: fullToken }),
