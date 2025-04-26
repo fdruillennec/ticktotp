@@ -6,6 +6,8 @@ import (
 
 	"totp-api/handlers"
 	"totp-api/redis"
+
+	"github.com/rs/cors"
 )
 
 func main() {
@@ -18,18 +20,18 @@ func main() {
 	mux.HandleFunc("/verify", handlers.VerifyHandler)
 	mux.HandleFunc("/status", handlers.StatusHandler)
 
-	// // Setup CORS
-	// corsHandler := cors.New(cors.Options{
-	// 	AllowedOrigins: []string{"https://ticktotp-aj0e.onrender.com/"}, // Frontend origin (Vite runs on 5173)
-	// 	AllowedMethods: []string{"GET", "POST", "PUT", "DELETE"},        // HTTP methods
-	// 	AllowedHeaders: []string{"Content-Type", "Authorization"},       // Headers allowed
-	// })
+	// Setup CORS middleware
+	corsHandler := cors.New(cors.Options{
+		AllowedOrigins: []string{"*"}, // ⬅️ Or specify "https://your-domain.com"
+		AllowedMethods: []string{"GET", "POST", "OPTIONS"},
+		AllowedHeaders: []string{"Content-Type", "Authorization"},
+	})
 
 	port := "3000"
 	fmt.Printf("✅ Server running at http://0.0.0.0:%s\n", port)
 
-	// Start server with CORS middleware
-	err := http.ListenAndServe("0.0.0.0:"+port, mux)
+	// Start server with CORS
+	err := http.ListenAndServe("0.0.0.0:"+port, corsHandler.Handler(mux))
 	if err != nil {
 		fmt.Println("❌ Error starting server:", err)
 	}
