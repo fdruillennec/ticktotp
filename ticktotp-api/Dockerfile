@@ -1,17 +1,21 @@
-FROM golang:1.21-alpine
+FROM golang:1.21-alpine as builder
 
 WORKDIR /app
 
-# Download dependencies early for caching
 COPY go.mod go.sum ./
 RUN go mod download
 
-# Copy source code
 COPY . .
+RUN go build -o ticktotp-api .
 
-# Build the app
-RUN go build -o main .
+FROM alpine:latest as runtime
+
+WORKDIR /app
+
+RUN apk --no-cache add ca-certificates
+
+COPY --from=builder /app/ticktotp-api .
 
 EXPOSE 8080
 
-CMD ["./main"]
+CMD ["./ticktotp-api"]
