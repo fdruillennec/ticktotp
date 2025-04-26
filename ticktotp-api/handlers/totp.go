@@ -48,11 +48,11 @@ func StatusHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	allowedOrigin := "https://ticktotp-aj0e.onrender.com/"
-	if r.Header.Get("Origin") != allowedOrigin {
-		http.Error(w, "Origin not allowed", http.StatusForbidden)
-		return
-	}
+	// allowedOrigin := "https://ticktotp-aj0e.onrender.com/"
+	// if r.Header.Get("Origin") != allowedOrigin {
+	// 	http.Error(w, "Origin not allowed", http.StatusForbidden)
+	// 	return
+	// }
 
 	email := r.URL.Query().Get("email")
 	if email == "" {

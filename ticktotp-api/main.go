@@ -6,8 +6,6 @@ import (
 
 	"totp-api/handlers"
 	"totp-api/redis"
-
-	"github.com/rs/cors"
 )
 
 func main() {
@@ -20,12 +18,12 @@ func main() {
 	mux.HandleFunc("/verify", handlers.VerifyHandler)
 	mux.HandleFunc("/status", handlers.StatusHandler)
 
-	// Setup CORS
-	corsHandler := cors.New(cors.Options{
-		AllowedOrigins: []string{"https://ticktotp-aj0e.onrender.com/"}, // Frontend origin (Vite runs on 5173)
-		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE"},        // HTTP methods
-		AllowedHeaders: []string{"Content-Type", "Authorization"},       // Headers allowed
-	})
+	// // Setup CORS
+	// corsHandler := cors.New(cors.Options{
+	// 	AllowedOrigins: []string{"https://ticktotp-aj0e.onrender.com/"}, // Frontend origin (Vite runs on 5173)
+	// 	AllowedMethods: []string{"GET", "POST", "PUT", "DELETE"},        // HTTP methods
+	// 	AllowedHeaders: []string{"Content-Type", "Authorization"},       // Headers allowed
+	// })
 
 	port := "3000"
 	fmt.Printf("✅ Server running at http://0.0.0.0:%s\n", port)
