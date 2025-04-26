@@ -22,9 +22,9 @@ func main() {
 
 	// Setup CORS
 	corsHandler := cors.New(cors.Options{
-		AllowedOrigins: []string{"http://localhost:8080"},         // Frontend origin (Vite runs on 5173)
-		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE"},  // HTTP methods
-		AllowedHeaders: []string{"Content-Type", "Authorization"}, // Headers allowed
+		AllowedOrigins: []string{"https://ticktotp-aj0e.onrender.com/"}, // Frontend origin (Vite runs on 5173)
+		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE"},        // HTTP methods
+		AllowedHeaders: []string{"Content-Type", "Authorization"},       // Headers allowed
 	})
 
 	port := "3000"
