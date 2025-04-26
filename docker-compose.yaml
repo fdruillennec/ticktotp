@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  api:
+    build:
+      context: ./ticktotp-api  # path to your Go API
+      dockerfile: Dockerfile
+    container_name: totp-api
+    ports:
+      - "8080:8080"
+    environment:
+      - REDIS_ADDR=redis:6379
+    volumes:
+      - redis-data:/data  # Store Redis data on disk
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7
+    container_name: totp-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: ["redis-server", "--appendonly", "yes", "--dir", "/data", "--appendfilename", "appendonly.aof"]
+
+
+  frontend:
+    build:
+      context: ./ticktotp-frontend  # path to your React frontend
+    container_name: totp-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:8080  # base API URL used in frontend
+    depends_on:
+      - api
+
+volumes:
+  redis-data:  # Ensure Redis data is stored persistently
