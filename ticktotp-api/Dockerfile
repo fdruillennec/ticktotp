@@ -1,17 +1,20 @@
-FROM golang:1.21-alpine
+FROM golang:1.21-alpine AS builder
 
 WORKDIR /app
 
-# Download dependencies early for caching
 COPY go.mod go.sum ./
 RUN go mod download
 
-# Copy source code
 COPY . .
 
-# Build the app
-RUN go build -o main .
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o main .
 
-EXPOSE 8080
+FROM gcr.io/distroless/static:nonroot as runtime
 
-CMD ["./main"]
+COPY --from=builder /app/main /
+
+EXPOSE 3000
+
+USER nonroot:nonroot
+
+ENTRYPOINT ["/main"]

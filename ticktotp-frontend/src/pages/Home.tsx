@@ -17,7 +17,7 @@ const Home: React.FC = () => {
 
   const handleLogin = async () => {
     try {
-      const res = await fetch(`http://localhost:8080/status?email=${encodeURIComponent(email)}`);
+      const res = await fetch(`https://ticktotp-aj0e.onrender.com/api/status?email=${encodeURIComponent(email)}`);
       if (res.status === 404) {
         setStep('generate');
       } else if (res.ok) {
@@ -33,7 +33,7 @@ const Home: React.FC = () => {
 
   const generateQrCode = async () => {
     try {
-      const res = await fetch('http://localhost:8080/generate', {
+      const res = await fetch('https://ticktotp-aj0e.onrender.com/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
@@ -58,7 +58,7 @@ const Home: React.FC = () => {
     setIsVerifying(true);
     try {
       const fullToken = token.join('');
-      const res = await fetch('http://localhost:8080/verify', {
+      const res = await fetch('https://ticktotp-aj0e.onrender.com/api/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, token: fullToken }),
@@ -170,18 +170,14 @@ const Home: React.FC = () => {
           <motion.div className="form" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5 }}>
             <p>Email not registered.</p>
             <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={generateQrCode}>
-              Configure my TOTP code
+              Connect an Authenticator App
             </motion.button>
             {qrCodeData ? (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
-                <p>Scan this QR code with your authenticator app:</p>
+                <p>Use the app to to scan this QR code</p>
                 <img src={qrCodeData} alt="QR Code" />
               </motion.div>
-            ) : (
-              <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
-                Generating QR code...
-              </motion.p>
-            )}
+            ) : null}
             <button className="back-button" onClick={resetProcess}>← Back to Home</button>
           </motion.div>
         )}

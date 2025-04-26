@@ -12,77 +12,76 @@ import (
 	"github.com/skip2/go-qrcode"
 )
 
-type GenerateRequest struct {
-	Email string `json:"email"`
-}
+type (
+	GenerateRequest struct {
+		Email string `json:"email"`
+	}
 
-type VerifyRequest struct {
-	Email string `json:"email"`
-	Token string `json:"token"`
-}
+	VerifyRequest struct {
+		Email string `json:"email"`
+		Token string `json:"token"`
+	}
 
-type TOTPSecretResponse struct {
-	Secret  string `json:"secret"`
-	OTPAuth string `json:"otpauth_url"`
-	QRCode  string `json:"qrcode_base64"`
-}
+	TOTPSecretResponse struct {
+		Secret  string `json:"secret"`
+		OTPAuth string `json:"otpauth_url"`
+		QRCode  string `json:"qrcode_base64"`
+	}
 
-type VerifyResponse struct {
-	Valid bool `json:"valid"`
-}
+	VerifyResponse struct {
+		Valid bool `json:"valid"`
+	}
+)
 
-// IsValidEmail returns true if the email is in a valid format.
+// IsValidEmail validates email format
 func IsValidEmail(email string) bool {
-	// Basic regex for email validation
 	regex := regexp.MustCompile(`^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$`)
 	return regex.MatchString(email)
 }
 
-// StatusHandler checks if the email exists in Redis and returns a JSON response
+// StatusHandler checks if email exists in Redis
 func StatusHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	// Check if the request method is GET
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	// Check if the request is from the allowed origin
-	allowedOrigin := "http://localhost:5173" // Replace with your frontend origin
-	if r.Header.Get("Origin") != allowedOrigin {
-		http.Error(w, "Origin not allowed", http.StatusForbidden)
-		return
-	}
-	// Check if the parameter email is present
+
+	// allowedOrigin := "https://ticktotp-aj0e.onrender.com/"
+	// if r.Header.Get("Origin") != allowedOrigin {
+	// 	http.Error(w, "Origin not allowed", http.StatusForbidden)
+	// 	return
+	// }
+
 	email := r.URL.Query().Get("email")
 	if email == "" {
 		http.Error(w, "Missing email parameter", http.StatusBadRequest)
 		return
 	}
-	// Check if the email is valid
 	if !IsValidEmail(email) {
 		http.Error(w, "Invalid email format", http.StatusBadRequest)
 		return
 	}
-	// Check if the email exists in Redis
+
 	inRedis, err := redis.EmailExists(email)
 	if err != nil {
 		http.Error(w, "Error checking email existence", http.StatusInternalServerError)
 		return
 	}
-	// If the email exists, return a 200 OK response
+
+	status := "not found"
+	code := http.StatusNotFound
 	if inRedis {
-		w.WriteHeader(http.StatusOK)
-		response := map[string]string{"status": "ok"}
-		json.NewEncoder(w).Encode(response)
-		return
+		status = "ok"
+		code = http.StatusOK
 	}
-	// If the email does not exist, return a 404 Not Found response
-	w.WriteHeader(http.StatusNotFound)
-	response := map[string]string{"status": "not found"}
-	json.NewEncoder(w).Encode(response)
+
+	w.WriteHeader(code)
+	json.NewEncoder(w).Encode(map[string]string{"status": status})
 }
 
+// GenerateHandler generates and stores a TOTP secret
 func GenerateHandler(w http.ResponseWriter, r *http.Request) {
 	var req GenerateRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil || req.Email == "" {
@@ -99,8 +98,7 @@ func GenerateHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = redis.Client.Set(redis.Ctx, req.Email, secret.Secret(), 0).Err()
-	if err != nil {
+	if err := redis.Client.Set(redis.Ctx, req.Email, secret.Secret(), 0).Err(); err != nil {
 		http.Error(w, "Failed to store secret", http.StatusInternalServerError)
 		return
 	}
@@ -116,9 +114,11 @@ func GenerateHandler(w http.ResponseWriter, r *http.Request) {
 		OTPAuth: secret.URL(),
 		QRCode:  "data:image/png;base64," + utils.EncodeToBase64(qr),
 	}
+
 	utils.WriteJSON(w, resp)
 }
 
+// VerifyHandler verifies a given TOTP token
 func VerifyHandler(w http.ResponseWriter, r *http.Request) {
 	var req VerifyRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil || req.Email == "" || req.Token == "" {
