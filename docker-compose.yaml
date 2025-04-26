@@ -1,40 +1,47 @@
 version: "3.8"
 
 services:
+  # Go API service
   api:
     build:
-      context: ./ticktotp-api  # path to your Go API
-      dockerfile: Dockerfile
+      context: ./ticktotp-api  # Path to the Go API code
+      dockerfile: Dockerfile    # Use the Dockerfile in the API project directory
     container_name: totp-api
     ports:
-      - "8080:8080"
+      - "3000:3000"  # Expose port 3000
     environment:
-      - REDIS_ADDR=redis:6379
+      - REDIS_ADDR=redis:6379  # Connect to Redis using service name
     volumes:
-      - redis-data:/data  # Store Redis data on disk
+      - ./ticktotp-api:/app  # Bind mount for development (auto sync with host)
     depends_on:
-      - redis
+      - redis  # Ensure Redis is up before starting the API
+    restart: unless-stopped  # Restart API if it crashes
 
+  # Redis service
   redis:
-    image: redis:7
+    image: redis:7  # Use Redis version 7
     container_name: totp-redis
     ports:
-      - "6379:6379"
+      - "6379:6379"  # Expose Redis port 6379
     volumes:
-      - redis-data:/data
+      - redis-data:/data  # Persist Redis data across restarts
     command: ["redis-server", "--appendonly", "yes", "--dir", "/data", "--appendfilename", "appendonly.aof"]
+    restart: unless-stopped  # Restart Redis if it crashes
 
-
+  # React frontend service
   frontend:
     build:
-      context: ./ticktotp-frontend  # path to your React frontend
+      context: ./ticktotp-frontend  # Path to the React code
     container_name: totp-frontend
     ports:
-      - "5173:5173"
+      - "8080:80"  # Expose frontend on port 8080
     environment:
-      - VITE_API_URL=http://localhost:8080  # base API URL used in frontend
+      - VITE_API_URL=http://totp-api:3000  # API URL to call the Go API service
     depends_on:
-      - api
+      - api  # Ensure API is up before starting the frontend
+    restart: unless-stopped  # Restart frontend if it crashes
 
+# Define persistent volume for Redis data
 volumes:
-  redis-data:  # Ensure Redis data is stored persistently
+  redis-data:
+    driver: local

@@ -13,7 +13,7 @@ FROM gcr.io/distroless/static:nonroot as runtime
 
 COPY --from=builder /app/main /
 
-EXPOSE 8080
+EXPOSE 3000
 
 USER nonroot:nonroot
 
