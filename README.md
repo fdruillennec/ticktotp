@@ -9,7 +9,24 @@ A modern Time-Based One-Time Password (TOTP) generator and verifier with a Go ba
 - 🐳 Full Docker Compose deployment
 - 🚀 RESTful API with CORS support
 - ⚡ Fast and lightweight Go backend
-- 🎨 Modern React frontend
+- 🎨 Modern React frontend with Tailwind CSS
+
+## Screenshots
+
+### User Authentication Flow
+
+<table>
+  <tr>
+    <td><img src="screenshots/1.png" alt="Email Not Registered" width="250"/><br/><b>First Time User</b><br/>Prompt to connect authenticator app</td>
+    <td><img src="screenshots/2.png" alt="QR Code" width="250"/><br/><b>QR Code Pairing</b><br/>Scan with authenticator app</td>
+    <td><img src="screenshots/3.png" alt="TOTP Entry" width="250"/><br/><b>TOTP Code Entry</b><br/>Enter 6-digit verification code</td>
+  </tr>
+  <tr>
+    <td><img src="screenshots/4.png" alt="Login Screen" width="250"/><br/><b>Login Screen</b><br/>Enter email to begin authentication</td>
+    <td><img src="screenshots/5.png" alt="Success" width="250"/><br/><b>Successful Authentication</b><br/>User connected confirmation</td>
+    <td></td>
+  </tr>
+</table>
 
 ## Architecture
 
@@ -20,6 +37,14 @@ A modern Time-Based One-Time Password (TOTP) generator and verifier with a Go ba
 │  (Port 8080) │     └──────────────┘     └──────────────┘
 └──────────────┘
 ```
+
+## How It Works
+
+1. **User Login** - Enter your email address
+2. **First Time Setup** - If not registered, scan QR code with your authenticator app (Google Authenticator, Authy, etc.)
+3. **Generate Code** - Your authenticator app generates a 6-digit TOTP code
+4. **Verify** - Enter the code to complete authentication
+5. **Success** - You're authenticated and connected!
 
 ## Quick Start
 
@@ -72,6 +97,12 @@ Content-Type: application/json
 {
   "identifier": "user@example.com"
 }
+
+Response:
+{
+  "secret": "BASE32_ENCODED_SECRET",
+  "qr_code": "data:image/png;base64,..."
+}
 ```
 
 ### Verify TOTP
@@ -83,11 +114,23 @@ Content-Type: application/json
   "identifier": "user@example.com",
   "code": "123456"
 }
+
+Response:
+{
+  "valid": true,
+  "message": "TOTP code verified successfully"
+}
 ```
 
 ### Health Check
 ```bash
 GET /status
+
+Response:
+{
+  "status": "healthy",
+  "redis": "connected"
+}
 ```
 
 ## Development
@@ -130,10 +173,11 @@ npm run build
 ```
 ticktotp/
 ├── docker-compose.yaml          # Container orchestration
+├── screenshots/                # Application screenshots
 ├── ticktotp-api/               # Go backend
 │   ├── handlers/               # HTTP request handlers
 │   ├── redis/                  # Redis client
-│   ├── utils/                  # Utility functions
+│   ├── utils/                  # Utility functions (TOTP generation)
 │   ├── main.go                 # Application entry point
 │   ├── go.mod                  # Go dependencies
 │   └── Dockerfile              # API container image
@@ -152,7 +196,7 @@ ticktotp/
 - `PORT`: API server port (default: `3000`)
 
 **Frontend Service:**
-- `VITE_API_URL`: Backend API URL (default: `http://totp-api:3000`)
+- `VITE_API_URL`: Backend API URL (default: `http://localhost:3000`)
 
 ## Security Considerations
 
@@ -161,6 +205,9 @@ ticktotp/
 - ⚠️ **Production**: Update CORS settings in `main.go` to restrict allowed origins
 - 🔐 **Production**: Use environment variables for sensitive configuration
 - 🚨 **Production**: Enable HTTPS/TLS for all endpoints
+- 🔑 **Production**: Implement rate limiting on verification endpoints
+
+For more security best practices, see [SECURITY.md](SECURITY.md).
 
 ## Contributing
 
@@ -172,16 +219,23 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
+For detailed guidelines, see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for a detailed history of changes and releases.
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 
-- Built with [Gin](https://github.com/gin-gonic/gin) web framework
-- TOTP implementation using standard libraries
+- Built with [rs/cors](https://github.com/rs/cors) for CORS middleware
+- TOTP implementation using Go standard libraries
 - Redis for persistent storage
-- React for modern UI
+- React with Vite for modern frontend
+- Tailwind CSS for styling
 
 ## Support
 
