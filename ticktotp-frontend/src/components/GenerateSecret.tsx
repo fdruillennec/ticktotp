@@ -7,7 +7,7 @@ export function GenerateSecret() {
 
   const generate = async () => {
     try {
-      const res = await fetch('http://localhost:8080/generate', {
+      const res = await fetch('http://localhost:3000/generate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

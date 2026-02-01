@@ -7,7 +7,7 @@ export function VerifyToken() {
 
   const verify = async () => {
     try {
-      const res = await fetch('http://localhost:8080/verify', {
+      const res = await fetch('http://localhost:3000/verify', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

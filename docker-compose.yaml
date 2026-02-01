@@ -1,47 +1,48 @@
 version: "3.8"
 
 services:
-  # Go API service
   api:
     build:
-      context: ./ticktotp-api  # Path to the Go API code
-      dockerfile: Dockerfile    # Use the Dockerfile in the API project directory
+      context: ./ticktotp-api
+      dockerfile: Dockerfile
     container_name: totp-api
     ports:
-      - "3000:3000"  # Expose port 3000
+      - "3000:3000"
     environment:
-      - REDIS_ADDR=redis:6379  # Connect to Redis using service name
+      - REDIS_ADDR=redis:6379
     volumes:
-      - ./ticktotp-api:/app  # Bind mount for development (auto sync with host)
+      - ./ticktotp-api:/app
     depends_on:
-      - redis  # Ensure Redis is up before starting the API
-    restart: unless-stopped  # Restart API if it crashes
-
-  # Redis service
-  redis:
-    image: redis:7  # Use Redis version 7
-    container_name: totp-redis
-    ports:
-      - "6379:6379"  # Expose Redis port 6379
-    volumes:
-      - redis-data:/data  # Persist Redis data across restarts
-    command: ["redis-server", "--appendonly", "yes", "--dir", "/data", "--appendfilename", "appendonly.aof"]
-    restart: unless-stopped  # Restart Redis if it crashes
-
-  # React frontend service
+      - redis
+    restart: unless-stopped
+  
   frontend:
     build:
-      context: ./ticktotp-frontend  # Path to the React code
+      context: ./ticktotp-frontend
+      dockerfile: Dockerfile
+      # Force rebuild by disabling cache
+      args:
+        BUILDKIT_INLINE_CACHE: 0
     container_name: totp-frontend
     ports:
-      - "8080:80"  # Expose frontend on port 8080
+      - "8080:80"
     environment:
-      - VITE_API_URL=http://totp-api:3000  # API URL to call the Go API service
+      - VITE_API_URL=http://localhost:3000
     depends_on:
-      - api  # Ensure API is up before starting the frontend
-    restart: unless-stopped  # Restart frontend if it crashes
+      - api
+    restart: unless-stopped
+    # Remove volumes to prevent caching issues
 
-# Define persistent volume for Redis data
+  redis:
+    image: redis:7
+    container_name: totp-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: ["redis-server", "--appendonly", "yes", "--dir", "/data", "--appendfilename", "appendonly.aof"]
+    restart: unless-stopped
+
 volumes:
   redis-data:
     driver: local

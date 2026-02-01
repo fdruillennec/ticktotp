@@ -11,10 +11,8 @@ import (
 )
 
 func main() {
-	// Initialize Redis connection
 	redis.Init()
 
-	// Define routes
 	mux := http.NewServeMux()
 	mux.HandleFunc("/generate", handlers.GenerateHandler)
 	mux.HandleFunc("/verify", handlers.VerifyHandler)

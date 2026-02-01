@@ -13,13 +13,13 @@ const Totp = () => {
   const [valid, setValid] = useState<boolean | null>(null);
 
   const generate = async () => {
-    const res = await axios.post('http://localhost:8080/totp/generate', { email });
+    const res = await axios.post('http://localhost:3000/generate', { email });
     setQrCode(res.data.qrcode_base64);
     setValid(null);
   };
 
   const verify = async () => {
-    const res = await axios.post('http://localhost:8080/totp/verify', { email, token });
+    const res = await axios.post('http://localhost:3000/verify', { email, token });
     setValid(res.data.valid);
   };
 

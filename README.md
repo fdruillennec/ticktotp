@@ -37,7 +37,7 @@ git clone https://github.com/fdruillennec/ticktotp.git
 cd ticktotp
 
 # Start all services
-docker-compose up -d
+docker-compose up -d --build
 
 # Check service status
 docker-compose ps

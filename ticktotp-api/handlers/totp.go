@@ -48,7 +48,7 @@ func StatusHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// allowedOrigin := "https://ticktotp-aj0e.onrender.com/"
+	// allowedOrigin := "https://localhost:8080/"
 	// if r.Header.Get("Origin") != allowedOrigin {
 	// 	http.Error(w, "Origin not allowed", http.StatusForbidden)
 	// 	return
