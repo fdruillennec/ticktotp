@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { API_URL } from '../config';
 import './Home.css';
 
 type Step = 'email' | 'generate' | 'verify';
@@ -17,7 +18,7 @@ const Home: React.FC = () => {
 
   const handleLogin = async () => {
     try {
-      const res = await fetch(`http://localhost:3000/status?email=${encodeURIComponent(email)}`);
+      const res = await fetch(`${API_URL}/status?email=${encodeURIComponent(email)}`);
       if (res.status === 404) {
         setStep('generate');
       } else if (res.ok) {
@@ -33,7 +34,7 @@ const Home: React.FC = () => {
 
   const generateQrCode = async () => {
     try {
-      const res = await fetch('http://localhost:3000/generate', {
+      const res = await fetch(`${API_URL}/generate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
@@ -58,7 +59,7 @@ const Home: React.FC = () => {
     setIsVerifying(true);
     try {
       const fullToken = token.join('');
-      const res = await fetch('http://localhost:3000/verify', {
+      const res = await fetch(`${API_URL}/verify`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, token: fullToken }),

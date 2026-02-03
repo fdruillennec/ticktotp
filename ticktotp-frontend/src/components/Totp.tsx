@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const baseURL = import.meta.env.VITE_API_URL;
+const apiURL = import.meta.env.VITE_API_URL;
 
-const res = await axios.post(`${baseURL}/totp/generate`, { email });
+const res = await axios.post(`${apiURL}/totp/generate`, { email });
 
 
 const Totp = () => {
@@ -13,13 +13,13 @@ const Totp = () => {
   const [valid, setValid] = useState<boolean | null>(null);
 
   const generate = async () => {
-    const res = await axios.post('http://localhost:3000/generate', { email });
+    const res = await axios.post(`${apiURL}/generate`, { email });
     setQrCode(res.data.qrcode_base64);
     setValid(null);
   };
 
   const verify = async () => {
-    const res = await axios.post('http://localhost:3000/verify', { email, token });
+    const res = await axios.post(`${apiURL}/verify`, { email, token });
     setValid(res.data.valid);
   };
 

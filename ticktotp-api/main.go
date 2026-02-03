@@ -17,10 +17,10 @@ func main() {
 	mux.HandleFunc("/generate", handlers.GenerateHandler)
 	mux.HandleFunc("/verify", handlers.VerifyHandler)
 	mux.HandleFunc("/status", handlers.StatusHandler)
+	mux.HandleFunc("/ping", handlers.PingHandler)
 
-	// Setup CORS middleware
 	corsHandler := cors.New(cors.Options{
-		AllowedOrigins: []string{"*"}, // ⬅️ Or specify "https://your-domain.com"
+		AllowedOrigins: []string{"http://localhost:8080"},
 		AllowedMethods: []string{"GET", "POST", "OPTIONS"},
 		AllowedHeaders: []string{"Content-Type", "Authorization"},
 	})

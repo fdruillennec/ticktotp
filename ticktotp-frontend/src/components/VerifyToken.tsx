@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+const apiURL = import.meta.env.VITE_API_URL;
 
 export function VerifyToken() {
   const [email, setEmail] = useState('');
@@ -7,16 +8,15 @@ export function VerifyToken() {
 
   const verify = async () => {
     try {
-      const res = await fetch('http://localhost:3000/verify', {
+      const res = await fetch(`${apiURL}/verify`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, token }), // Send the email and token
+        body: JSON.stringify({ email, token }),
       });
 
       if (res.status === 404) {
-        // If the API returns a 404, it means the email was not found
         setMessage('Email not found');
         return;
       }
@@ -24,12 +24,10 @@ export function VerifyToken() {
       const data = await res.json();
 
       if (!res.ok || !data.valid) {
-        // If the response is not valid or the token is invalid
         setMessage('Invalid token or email');
         return;
       }
 
-      // If the response is valid, display a success message
       setMessage('Token successfully verified!');
     } catch (error) {
       setMessage(`Error: ${error.message}`);

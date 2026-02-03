@@ -95,12 +95,13 @@ POST /generate
 Content-Type: application/json
 
 {
-  "identifier": "user@example.com"
+  "email": "user@example.com"
 }
 
 Response:
 {
   "secret": "BASE32_ENCODED_SECRET",
+  "otpauth_url": "otpauth://totp/TickTOTP:EMAIL?algorithm=SHA1\u0026digits=6\u0026issuer=TickTOTP\u0026period=30\u0026secret=BASE32_ENCODED_SECRET"
   "qr_code": "data:image/png;base64,..."
 }
 ```
@@ -111,25 +112,23 @@ POST /verify
 Content-Type: application/json
 
 {
-  "identifier": "user@example.com",
-  "code": "123456"
+  "email": "user@example.com",
+  "token": "123456"
 }
 
 Response:
 {
   "valid": true,
-  "message": "TOTP code verified successfully"
 }
 ```
 
-### Health Check
+### User Check
 ```bash
 GET /status
 
 Response:
 {
-  "status": "healthy",
-  "redis": "connected"
+  "status": "ok"
 }
 ```
 

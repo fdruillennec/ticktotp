@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   api:
     build:
@@ -20,18 +18,15 @@ services:
     build:
       context: ./ticktotp-frontend
       dockerfile: Dockerfile
-      # Force rebuild by disabling cache
-      args:
-        BUILDKIT_INLINE_CACHE: 0
+      # Pass API URL as build argument
+    environment:
+      - VITE_API_URL=http://localhost:3000
     container_name: totp-frontend
     ports:
       - "8080:80"
-    environment:
-      - VITE_API_URL=http://localhost:3000
     depends_on:
       - api
     restart: unless-stopped
-    # Remove volumes to prevent caching issues
 
   redis:
     image: redis:7

@@ -33,7 +33,6 @@ type (
 	}
 )
 
-// IsValidEmail validates email format
 func IsValidEmail(email string) bool {
 	regex := regexp.MustCompile(`^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$`)
 	return regex.MatchString(email)
@@ -47,12 +46,6 @@ func StatusHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-
-	// allowedOrigin := "https://localhost:8080/"
-	// if r.Header.Get("Origin") != allowedOrigin {
-	// 	http.Error(w, "Origin not allowed", http.StatusForbidden)
-	// 	return
-	// }
 
 	email := r.URL.Query().Get("email")
 	if email == "" {

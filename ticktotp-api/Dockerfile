@@ -9,7 +9,7 @@ COPY . .
 
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o main .
 
-FROM gcr.io/distroless/static:nonroot as runtime
+FROM gcr.io/distroless/static:nonroot AS runtime
 
 COPY --from=builder /app/main /
 

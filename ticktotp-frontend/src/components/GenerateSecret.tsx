@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+const apiURL = import.meta.env.VITE_API_URL;
 
 export function GenerateSecret() {
   const [email, setEmail] = useState('');
@@ -7,12 +8,12 @@ export function GenerateSecret() {
 
   const generate = async () => {
     try {
-      const res = await fetch('http://localhost:3000/generate', {
+      const res = await fetch(`${apiURL}/generate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email }), // Send the email address as part of the body
+        body: JSON.stringify({ email }),
       });
 
       if (!res.ok) {
@@ -20,7 +21,7 @@ export function GenerateSecret() {
       }
 
       const data = await res.json();
-      setQrUrl(data.qrcode_base64);  // Set the QR code image (base64)
+      setQrUrl(data.qrcode_base64);
       setSecret(data.secret);        // Set the secret for debug purposes
     } catch (error) {
       console.error('Error generating TOTP secret:', error);
