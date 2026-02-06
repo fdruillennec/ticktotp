@@ -2,6 +2,8 @@
 
 A modern Time-Based One-Time Password (TOTP) generator and verifier with a Go backend API and React frontend.
 
+📝 **Read the full story**: [Building a Modern TOTP Authentication System with Go, React, and Redis](https://frankdruillennec.medium.com/building-a-modern-totp-authentication-system-with-go-react-and-redis-a92920b7eaee)
+
 ## Features
 
 - ✨ Generate secure TOTP codes
@@ -99,7 +101,7 @@ Content-Type: application/json
 Response:
 {
   "secret": "BASE32_ENCODED_SECRET",
-  "otpauth_url": "otpauth://totp/TickTOTP:EMAIL?algorithm=SHA1\u0026digits=6\u0026issuer=TickTOTP\u0026period=30\u0026secret=BASE32_ENCODED_SECRET"
+  "otpauth_url": "otpauth://totp/TickTOTP:EMAIL?algorithm=SHA1&digits=6&issuer=TickTOTP&period=30&secret=BASE32_ENCODED_SECRET"
   "qr_code": "data:image/png;base64,..."
 }
 ```
@@ -205,6 +207,12 @@ ticktotp/
 - 🔑 **Production**: Implement rate limiting on verification endpoints
 
 For more security best practices, see [SECURITY.md](SECURITY.md).
+
+## Learn More
+
+📖 **Deep Dive Article**: [Building a Modern TOTP Authentication System with Go, React, and Redis](https://frankdruillennec.medium.com/building-a-modern-totp-authentication-system-with-go-react-and-redis-a92920b7eaee)
+
+Read about the technical decisions, challenges, and lessons learned while building this project.
 
 ## Changelog
 
