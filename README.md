@@ -74,8 +74,6 @@ docker-compose logs -f
 ### Accessing the Application
 
 - **Frontend**: http://localhost:8080
-- **API**: http://localhost:3000
-- **Redis**: localhost:6379
 
 ### Stopping Services
 
@@ -207,18 +205,6 @@ ticktotp/
 - 🔑 **Production**: Implement rate limiting on verification endpoints
 
 For more security best practices, see [SECURITY.md](SECURITY.md).
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'feat: add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-For detailed guidelines, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Changelog
 

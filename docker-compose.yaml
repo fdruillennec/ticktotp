@@ -18,7 +18,6 @@ services:
     build:
       context: ./ticktotp-frontend
       dockerfile: Dockerfile
-      # Pass API URL as build argument
     environment:
       - VITE_API_URL=http://localhost:3000
     container_name: totp-frontend

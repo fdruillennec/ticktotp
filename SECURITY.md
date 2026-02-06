@@ -1,49 +1,5 @@
 # Security Policy
 
-## Supported Versions
-
-This project is currently in active development. Security updates are provided for the latest version on the `main` branch.
-
-| Version | Supported          |
-| ------- | ------------------ |
-| main    | :white_check_mark: |
-| < 1.0   | :x:                |
-
-## Reporting a Vulnerability
-
-We take security seriously. If you discover a security vulnerability in TickTOTP, please report it responsibly.
-
-### How to Report
-
-**Please do NOT create a public GitHub issue for security vulnerabilities.**
-
-Instead, please report security issues by:
-
-1. **Email**: Send details to the repository owner via GitHub private message
-2. **GitHub Security Advisories**: Use the "Security" tab to privately report a vulnerability
-
-### What to Include
-
-When reporting a vulnerability, please include:
-
-- **Description** of the vulnerability
-- **Steps to reproduce** the issue
-- **Potential impact** of the vulnerability
-- **Suggested fix** (if you have one)
-- **Your contact information** for follow-up
-
-### Response Timeline
-
-- **Initial Response**: Within 48 hours of report
-- **Status Update**: Within 7 days with assessment and planned fix timeline
-- **Resolution**: Varies by severity, typically within 30 days
-
-### Disclosure Policy
-
-- Security issues will be patched before public disclosure
-- We will credit reporters in release notes (unless anonymity is requested)
-- Public disclosure will happen after a fix is available and deployed
-
 ## Security Best Practices
 
 ### For Production Deployments
@@ -104,12 +60,11 @@ When reporting a vulnerability, please include:
 
 ### Current Implementation
 
-- **CORS is wide open** (`AllowedOrigins: []string{"*"}`) - Must be restricted for production
 - **No rate limiting** - Should be added before production deployment
 - **No authentication** on API endpoints - Consider adding API keys or OAuth2
 - **Redis runs without authentication** - Should enable `requirepass` in production
 
-### Roadmap
+### Improvements
 
 Planned security enhancements:
 - [ ] Add rate limiting middleware
@@ -126,7 +81,3 @@ Planned security enhancements:
 - [Go Security Best Practices](https://go.dev/doc/security/)
 - [Docker Security Best Practices](https://docs.docker.com/engine/security/)
 - [Redis Security](https://redis.io/docs/management/security/)
-
-## Questions?
-
-For general security questions (not vulnerabilities), feel free to open a public issue with the `security` label.
